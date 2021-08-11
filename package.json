@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "typings": "dist/types/main.d.ts",
   "scripts": {
+    "ling": "eslint",
     "start": "ts-node src/main.ts",
     "build": "tsc && tsc --project tsconfig.action.json"
   },
@@ -12,6 +13,8 @@
     "@types/ftp": "^0.3.32",
     "@types/glob": "^7.1.4",
     "@types/node": "^16.4.13",
+    "@typescript-eslint/eslint-plugin": "^4.29.1",
+    "@typescript-eslint/parser": "^4.29.1",
     "eslint": "^7.32.0",
     "nodemon": "^2.0.12",
     "ts-node": "^10.2.0",

@@ -15,7 +15,7 @@ interface IConfigDeploy extends FPT.Options {
   error?: (error: Error) => void;
 }
 
-export async function deployFtp(config: IConfigDeploy) {
+export async function deployFtp(config: IConfigDeploy): Promise<void> {
   return await new Deploy(config).publish();
 }
 
@@ -26,7 +26,7 @@ export class Deploy extends FPT {
     config.serverDir = config.serverDir || "./";
   }
 
-  async publish() {
+  async publish(): Promise<void> {
     await this.connectAsync();
 
     const localDir = this.config.localDir;
@@ -46,12 +46,12 @@ export class Deploy extends FPT {
       await this.mkdirAsync(serverDir);
     }
 
-    for await (let file of files) {
+    for await (const file of files) {
       let destDirPath = `${serverDir}/${file.dir}`;
       if (destDirPath.endsWith("/")) {
         destDirPath = destDirPath.substring(0, destDirPath.length - 1);
       }
-      let destPath = `${destDirPath}/${file.name}`;
+      const destPath = `${destDirPath}/${file.name}`;
       if (!(await this.existDirAsync(destDirPath))) {
         await this.mkdirAsync(destDirPath);
       }
@@ -62,7 +62,7 @@ export class Deploy extends FPT {
     this.end();
   }
 
-  connectAsync() {
+  connectAsync(): Promise<void> {
     return new Promise((resolve) => {
       this.on("ready", (args) => {
         resolve(args);
@@ -71,18 +71,18 @@ export class Deploy extends FPT {
     });
   }
 
-  saveAsync(
+  async saveAsync(
     input: string | NodeJS.ReadableStream | Buffer,
     destPath: string,
-    overwrite: boolean = true
-  ) {
-    return new Promise(async (resolve) => {
-      if (overwrite) {
-        if (await this.existFileAsync(destPath)) {
-          await this.deleteAsync(destPath);
-        }
+    overwrite = true
+  ): Promise<boolean> {
+    if (overwrite) {
+      if (await this.existFileAsync(destPath)) {
+        await this.deleteAsync(destPath);
       }
+    }
 
+    return await new Promise((resolve) => {
       super.put(input, destPath, (error) => {
         if (error) {
           this.config.error?.(error);
@@ -93,7 +93,7 @@ export class Deploy extends FPT {
     });
   }
 
-  mkdirAsync(pathDir: string, resucse: boolean = true) {
+  mkdirAsync(pathDir: string, resucse = true): Promise<boolean> {
     return new Promise((resolve) => {
       super.mkdir(pathDir, resucse, (error) => {
         if (error) {
@@ -105,11 +105,11 @@ export class Deploy extends FPT {
     });
   }
 
-  async deleteAsync(path: string) {
+  async deleteAsync(path: string): Promise<boolean> {
     if (!(await this.existFileAsync(path))) {
       return false;
     }
-    return await new Promise((resolve, reject) => {
+    return await new Promise((resolve) => {
       super.delete(path, (error) => {
         if (error) {
           this.config.error?.(error);
@@ -120,7 +120,7 @@ export class Deploy extends FPT {
     });
   }
 
-  async deleteDirAsync(path: string, resucse: boolean = false) {
+  async deleteDirAsync(path: string, resucse = false): Promise<boolean> {
     if (!(await this.existDirAsync(path))) {
       return false;
     }
@@ -135,7 +135,7 @@ export class Deploy extends FPT {
     });
   }
 
-  existFileAsync(pathFile: string) {
+  existFileAsync(pathFile: string): Promise<boolean> {
     return new Promise((resolve) => {
       this.get(pathFile, (error) => {
         if (error) {
@@ -146,7 +146,7 @@ export class Deploy extends FPT {
     });
   }
 
-  existDirAsync(pathDir: string) {
+  existDirAsync(pathDir: string): Promise<boolean> {
     return new Promise((resolve) => {
       this.list(pathDir, (error) => {
         if (error) {
