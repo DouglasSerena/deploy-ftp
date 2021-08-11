@@ -1,0 +1,34 @@
+name: "FTP Deploy"
+description: "Deploy via ftp"
+author: "DouglasSerena"
+inputs:
+  server:
+    required: true
+    description: "ftp server"
+  username:
+    required: true
+    description: "ftp username"
+  password:
+    required: true
+    description: "ftp password"
+  port:
+    required: false
+    description: "Server port"
+  local-dir:
+    required: false
+    description: "Folder to upload from, must end with trailing slash /"
+  server-dir:
+    required: false
+    description: "Path to upload to on the server. Must end with trailing slash /"
+  server-dir-clear:
+    required: false
+    description: "Clear dir server"
+  security:
+    required: false
+    description: "strict or loose"
+runs:
+  using: "node12"
+  main: "dist/action.js"
+branding:
+  icon: "upload-cloud"
+  color: "orange"

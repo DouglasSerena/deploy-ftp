@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outFile" : "./dist/action.js",
+  },
+  "exclude": [
+    "node_modules",
+    "tests",
+  ]
+}

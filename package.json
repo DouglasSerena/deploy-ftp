@@ -1,0 +1,25 @@
+{
+  "name": "actions-ftp",
+  "version": "1.0.0",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "typings": "dist/types/main.d.ts",
+  "scripts": {
+    "start": "ts-node src/main.ts",
+    "build": "tsc && tsc --project tsconfig.action.json"
+  },
+  "devDependencies": {
+    "@types/ftp": "^0.3.32",
+    "@types/glob": "^7.1.4",
+    "@types/node": "^16.4.13",
+    "eslint": "^7.32.0",
+    "nodemon": "^2.0.12",
+    "ts-node": "^10.2.0",
+    "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "@actions/core": "^1.4.0",
+    "ftp": "^0.3.10",
+    "glob": "^7.1.7"
+  }
+}
